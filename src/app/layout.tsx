@@ -7,6 +7,8 @@ import Header from '@/components/Header/Header';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import Script from 'next/script';
+import { GA_TRACKING_ID } from './lib/gtag';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://wikid-19-8.vercel.app'),
@@ -96,6 +98,19 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"
         />
+        {/* JSX문법으로 작성 Script를 꼭 import해서 사용하기 strategy="afterInteractive" 는 화면이 인터랙티브 해진 뒤에 로드하라는 의미 */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${GA_TRACKING_ID}');
+  `}
+        </Script>
       </head>
       <body>
         <AuthProvider>

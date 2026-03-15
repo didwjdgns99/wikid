@@ -29,7 +29,7 @@ type ArticleProps = {
   image?: string;
 };
 
-type SortOption = '최신순' | '인기순';
+type SortOption = '최신순' | '인기순' | '내가 쓴 글';
 const PAGE_SIZE = 10;
 
 const boardStyle = tv({
@@ -44,7 +44,7 @@ export default function BoardsPage() {
   const [page, setPage] = useState(1);
   const [errSnackBar, setErrorSnackBar] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const { isOpen, openModal, closeModal } = useModal();
   const router = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,15 +77,31 @@ export default function BoardsPage() {
   };
 
   const startIndex = (page - 1) * PAGE_SIZE;
-  const sortedarticleData = [...filteredarticleData].sort((a, b) => {
-    if (sort === '인기순') {
-      return b.likeCount - a.likeCount;
+  // const sortedarticleData = [...filteredarticleData].sort((a, b) => {
+  //   if (sort === '인기순') {
+  //     return b.likeCount - a.likeCount;
+  //   }
+
+  //   return b.createdAt.localeCompare(a.createdAt);
+  // });
+
+  const dropdownSort = () => {
+    if (sort === '내가 쓴 글') {
+      return filteredarticleData.filter((article) => article.writer.id === Number(user?.id));
     }
 
-    return b.createdAt.localeCompare(a.createdAt);
-  });
+    const data = [...filteredarticleData];
 
-  const pagedarticleData = sortedarticleData.slice(startIndex, startIndex + PAGE_SIZE);
+    if (sort === '인기순') {
+      return data.sort((a, b) => b.likeCount - a.likeCount);
+    }
+
+    return data.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  };
+
+  const sortedArticleData = dropdownSort();
+
+  const pagedarticleData = sortedArticleData.slice(startIndex, startIndex + PAGE_SIZE);
 
   const useHorizontalScroll = () => {
     const bestArticleRef = useRef<HTMLDivElement>(null);
@@ -248,7 +264,7 @@ export default function BoardsPage() {
           </div>
           <DropDown onSelect={handleSelect} />
         </div>
-        <table className="text-grayscale-400 m-auto mt-[30px] mb-8 min-h-[600px] w-full sm:mt-5 sm:mb-[60px] md:px-[60px] lg:w-[1060px]">
+        <table className="text-grayscale-400 m-auto mt-[30px] mb-8 w-full sm:mt-5 sm:mb-[60px] md:px-[60px] lg:w-[1060px]">
           <thead className="text-lg-regular max-[640px]:hidden">
             <tr className="border-b">
               <th className="text-lg-regular px-4 py-2">번호</th>

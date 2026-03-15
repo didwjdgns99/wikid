@@ -13,13 +13,13 @@ interface SearchInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 
-  onSubmit: () => void;
+  onSubmit?: () => void;
 }
 
 export default function SearchInput({ value, onChange, onSubmit }: SearchInputProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit();
+    onSubmit?.();
   };
   return (
     <form onSubmit={handleSubmit} className={formStyle()}>
