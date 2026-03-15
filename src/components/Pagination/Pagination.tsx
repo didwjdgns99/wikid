@@ -53,31 +53,28 @@ export default function Pagination({
 
   if (startPage < 1) startPage = 1;
 
-  const pageNumbers: number[] = [];
-  for (let i = startPage; i <= endPage; i++) {
-    pageNumbers.push(i);
-  }
-
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPage) return;
     setPage(page);
   };
 
-  const handlePrev = () => {
+  const endBlock = currentPage + (totalPage - currentPage);
+
+  const handleStart = () => {
     if (currentPage > 1) {
-      setPage(currentPage - 1);
+      setPage(1);
     }
   };
 
-  const handleNext = () => {
+  const handleEnd = () => {
     if (currentPage < totalPage) {
-      setPage(currentPage + 1);
+      setPage(endBlock);
     }
   };
 
   return (
     <div className={paginationStyle()}>
-      <button className={paginationBtnStyle()} disabled={currentPage === 1} onClick={handlePrev}>
+      <button className={paginationBtnStyle()} disabled={currentPage === 1} onClick={handleStart}>
         <SVGIcon icon="IC_Expand" className="rotate-90" />
       </button>
       {pageBtn.map((_, num) => {
@@ -96,7 +93,7 @@ export default function Pagination({
       <button
         className={paginationBtnStyle()}
         disabled={currentPage === totalPage}
-        onClick={handleNext}
+        onClick={handleEnd}
       >
         <SVGIcon icon="IC_Expand" className="-rotate-90" />
       </button>

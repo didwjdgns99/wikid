@@ -46,10 +46,14 @@ function WikiListContent() {
     setSearch(e.target.value);
   };
 
-  const handleSubmit = () => {
-    router.push(`/wikilist?keyword=${encodeURIComponent(search)}`);
-    setPage(1);
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push(`/wikilist?keyword=${encodeURIComponent(search)}`);
+      setPage(1);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const filteredProfiles = keywordFromUrl
     ? profiles.filter((profile) => profile.name.includes(keywordFromUrl))
@@ -91,7 +95,7 @@ function WikiListContent() {
     <div>
       <div className={wikiWrap()}>
         <div className={searchStyle()}>
-          <SearchInput value={search} onChange={handleChange} onSubmit={handleSubmit} />
+          <SearchInput value={search} onChange={handleChange} />
           <span className="text-grayscale-400 max-[680px]:text-sm">
             {keywordFromUrl ? (
               filteredProfiles.length > 0 ? (

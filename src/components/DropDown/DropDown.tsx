@@ -4,13 +4,13 @@ import { useState, useRef, useEffect } from 'react';
 import SVGIcon from '../SVGIcon/SVGIcon';
 import { tv } from 'tailwind-variants';
 
-type SortOption = '최신순' | '인기순';
+type SortOption = '최신순' | '인기순' | '내가 쓴 글';
 
 interface DropDownProps {
   onSelect: (option: SortOption) => void;
 }
 
-const options: SortOption[] = ['최신순', '인기순'];
+const options: SortOption[] = ['최신순', '인기순', '내가 쓴 글'];
 
 const dropDownStyle = tv({
   base: 'bg-grayscale-100 flex h-[45px] w-[335px] w-full items-center justify-between  px-[20px] py-[10px] sm:w-[120px] lg:w-[140px] cursor-pointer rounded-[10px]',

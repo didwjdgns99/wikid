@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export default function WikiCreatePage() {
   const router = useRouter();
+  const [errSnackBar, setErrorSnackBar] = useState(false);
   const { updateUserProfile } = useAuth();
   const [formData, setFormData] = useState({
     securityQuestion: '',
@@ -86,7 +87,8 @@ export default function WikiCreatePage() {
       });
 
       if (!response.ok) {
-        throw new Error('위키 생성에 실패했습니다.');
+        setErrorSnackBar(true);
+        return;
       }
 
       const data = await response.json();
@@ -161,6 +163,12 @@ export default function WikiCreatePage() {
         isOpen={showSnackbar}
         onClose={() => setShowSnackbar(false)}
         duration={2000}
+      />
+      <SnackBar
+        isOpen={errSnackBar}
+        message="이미 생성된 위키가 있습니다."
+        type="error"
+        onClose={() => setErrorSnackBar(false)}
       />
     </>
   );
